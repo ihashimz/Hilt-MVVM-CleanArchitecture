@@ -26,7 +26,7 @@ class Resource<T> private constructor(
             return Resource(
                 Status.ERROR,
                 data,
-                msg.toString()
+                msg
             )
         }
 

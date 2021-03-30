@@ -1,10 +1,11 @@
 package com.example.hilt_mvvm
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import com.example.hilt_mvvm.core.network.Resource
 import com.example.hilt_mvvm.ui.main.data.entities.Post
 import com.example.hilt_mvvm.ui.main.data.repository.PostRepository
-import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -13,8 +14,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import java.util.*
-import kotlin.collections.ArrayList
+import retrofit2.HttpException
+import java.lang.Exception
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class NetworkTest {
 
@@ -34,60 +37,25 @@ class NetworkTest {
         mainThreadSurrogate.close()
     }
 
-    @Test
-    fun testMutableGetPosts() = runBlocking {
-        getPosts()
-    }
 
-    @Test
-    fun testMutableGetPost() = runBlocking {
-            getMutablePost(2)
-    }
-
-    @Test
-    fun testGetPosts()= runBlocking {
-        getPosts2()
-    }
 
     @Test
     fun testGetPost() = runBlocking {
-        getPost()
-    }
 
+        val postRequest = PostRepository().getPostMutableNewApi(1).value
 
-    suspend fun getPosts()  {
-        val res = PostRepository().getPosts()!!
-        res.observeForever { response ->
-            when (response.status) {
+        when (postRequest!!.status) {
 
-                Resource.Status.SUCCESS -> {
-                    val list = response.data
-                    print(list!!)
-                }
-
-                Resource.Status.LOADING -> {
-                    println("Loading")
-                }
-
-                Resource.Status.ERROR -> {
-                    println(res.value!!.message)
-                }
+            Resource.Status.SUCCESS -> {
+                print(postRequest.data)
             }
+
+            Resource.Status.ERROR -> {
+                print("${postRequest.status} ${postRequest.message}")
+            }
+
         }
+
     }
 
-    private suspend fun getMutablePost(id:Int){
-        val res = PostRepository().getMutablePost(1)!!
-        print(res.value!!.data)
-    }
-
-    suspend fun getPost(){
-        val res = PostRepository().getPost(1)
-        print(res)
-    }
-
-    suspend fun getPosts2(){
-        val res = PostRepository().getPosts2()
-        print(res)
-    }
 }
