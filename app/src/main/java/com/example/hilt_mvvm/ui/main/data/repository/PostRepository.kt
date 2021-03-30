@@ -11,15 +11,12 @@ val postsServices = ServiceGenerator().createService(PostsServices::class.java)
 
 class PostRepository {
 
-
-    suspend fun getPost(id: Int) = postsServices.getPost(id)
-
-    // New Way
-    suspend fun getPostMutableNewApi(id: Int) : MutableLiveData<Resource<Post>>{
+    suspend fun getPost(id: Int) : MutableLiveData<Resource<Post>>{
         return BaseResponsesRepository.networkHandler(postsServices.getPost(id))
     }
 
-
-    suspend fun getPosts2() = postsServices.getPosts2()
+    suspend fun getPosts(): MutableLiveData<Resource<ArrayList<Post>>> {
+        return BaseResponsesRepository.networkHandler(postsServices.getPosts())
+    }
 
 }

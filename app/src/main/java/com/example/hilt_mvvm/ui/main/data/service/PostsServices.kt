@@ -9,15 +9,10 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface PostsServices {
-    @GET("posts")
-    fun getPosts():Call<ResponseBody>
 
     @GET("/posts/{id}")
     suspend fun getPost(@Path(value = "id") postId: Int): Post
 
-    @GET("posts/{id}")
-    fun getMutablePost(@Path(value = "id") postId: Int):Call<ResponseBody>
-
     @GET("/posts")
-    suspend fun getPosts2(): ArrayList<Post>
+    suspend fun getPosts(): ArrayList<Post>
 }

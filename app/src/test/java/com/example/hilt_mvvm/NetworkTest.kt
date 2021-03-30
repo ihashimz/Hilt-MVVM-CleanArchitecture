@@ -42,7 +42,26 @@ class NetworkTest {
     @Test
     fun testGetPost() = runBlocking {
 
-        val postRequest = PostRepository().getPostMutableNewApi(1).value
+        val postRequest = PostRepository().getPost(1).value
+
+        when (postRequest!!.status) {
+
+            Resource.Status.SUCCESS -> {
+                print(postRequest.data)
+            }
+
+            Resource.Status.ERROR -> {
+                print("${postRequest.status} ${postRequest.message}")
+            }
+
+        }
+
+    }
+
+    @Test
+    fun testGetPosts() = runBlocking {
+
+        val postRequest = PostRepository().getPosts().value
 
         when (postRequest!!.status) {
 
