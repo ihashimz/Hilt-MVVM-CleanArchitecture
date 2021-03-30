@@ -6,7 +6,7 @@ package com.example.hilt_mvvm.core.network
  */
 
 class Resource<T> private constructor(
-    val status: Status, val data: T?,
+    val status: Status, var data: T?,
     val message: String?
 ) {
     enum class Status {
@@ -22,7 +22,7 @@ class Resource<T> private constructor(
             )
         }
 
-        fun <T> error(msg: String, data: T): Resource<T> {
+        fun <T> error(msg: String, data: T ?): Resource<T> {
             return Resource(
                 Status.ERROR,
                 data,

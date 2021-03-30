@@ -13,7 +13,10 @@ interface PostsServices {
     fun getPosts():Call<ResponseBody>
 
     @GET("/posts/{id}")
-    suspend fun getPost(@Path(value = "id") todoId: Int): Post
+    suspend fun getPost(@Path(value = "id") postId: Int): Post
+
+    @GET("posts/{id}")
+    fun getMutablePost(@Path(value = "id") postId: Int):Call<ResponseBody>
 
     @GET("/posts")
     suspend fun getPosts2(): ArrayList<Post>

@@ -8,15 +8,17 @@ import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import com.example.hilt_mvvm.core.network.Result
 import com.example.hilt_mvvm.ui.main.data.service.PostsServices
+import com.google.gson.Gson
+import retrofit2.Call
 
 /**
  * Created By @HashimHabtur on 24/06/2020 AD
  */
 
 
-suspend fun BaseRepository(req: retrofit2.Call<ResponseBody>): MutableLiveData<Resource<Any>> {
+suspend inline fun <reified T> BaseRepository(req: Call<ResponseBody>): MutableLiveData<Resource<T>> {
 
-    val mutableLiveData = MutableLiveData<Resource<Any>>()
+    val mutableLiveData = MutableLiveData<Resource<T>>()
     try {
         withContext(Dispatchers.Main) {
 
@@ -27,13 +29,13 @@ suspend fun BaseRepository(req: retrofit2.Call<ResponseBody>): MutableLiveData<R
                 //Successful HTTP result
                 is Result.Ok -> {
                     mutableLiveData.value = Resource.success(
-                        result.value.string()
+                        Gson().fromJson(result.value.string(),T::class.java)
                     )
                 }
                 // Any HTTP error
                 is Result.Error -> {
                     mutableLiveData.value =
-                        Resource.error(result.response.code.toString(), result.value.string())
+                        Resource.error(result.response.code.toString(), null)
                 }
                 // Exception while request invocation
                 is Result.Exception -> Resource.error(
@@ -43,7 +45,7 @@ suspend fun BaseRepository(req: retrofit2.Call<ResponseBody>): MutableLiveData<R
             }
         }
     } catch (e: Exception) {
-        mutableLiveData.value = Resource.error("Something went wrong, please try again", "")
+        mutableLiveData.value = Resource.error("Something went wrong, please try again", null)
 
     }
     return mutableLiveData

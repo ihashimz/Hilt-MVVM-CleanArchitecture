@@ -16,7 +16,7 @@ import org.junit.rules.TestRule
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SomeTest {
+class NetworkTest {
 
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
@@ -35,16 +35,25 @@ class SomeTest {
     }
 
     @Test
-    fun testSomeUI() = runBlocking {
-        getFun()
+    fun testMutableGetPosts() = runBlocking {
+        getPosts()
     }
 
-    fun CoroutineScope.getFun() {
-        // This coroutines `Job` is not shared with the test code
-        launch {
-            getPosts()     // executes eagerly when foo() is called due to runBlockingTest
-        }
+    @Test
+    fun testMutableGetPost() = runBlocking {
+            getMutablePost(2)
     }
+
+    @Test
+    fun testGetPosts()= runBlocking {
+        getPosts2()
+    }
+
+    @Test
+    fun testGetPost() = runBlocking {
+        getPost()
+    }
+
 
     suspend fun getPosts()  {
         val res = PostRepository().getPosts()!!
@@ -52,8 +61,8 @@ class SomeTest {
             when (response.status) {
 
                 Resource.Status.SUCCESS -> {
-                    val list = Gson().fromJson(response.data.toString(), ArrayList<Post>()::class.java)
-                    print(list[0])
+                    val list = response.data
+                    print(list!!)
                 }
 
                 Resource.Status.LOADING -> {
@@ -61,17 +70,19 @@ class SomeTest {
                 }
 
                 Resource.Status.ERROR -> {
-                    println("Error")
+                    println(res.value!!.message)
                 }
             }
-
         }
-        print(res)
+    }
 
+    private suspend fun getMutablePost(id:Int){
+        val res = PostRepository().getMutablePost(1)!!
+        print(res.value!!.data)
     }
 
     suspend fun getPost(){
-        val res = PostRepository().getPost(5785478)
+        val res = PostRepository().getPost(1)
         print(res)
     }
 
