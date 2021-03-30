@@ -1,18 +1,8 @@
 package com.example.hilt_mvvm.core.network
 
 import androidx.lifecycle.MutableLiveData
-import com.example.hilt_mvvm.core.network.Resource
-import com.example.hilt_mvvm.core.network.awaitResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
-import com.example.hilt_mvvm.core.network.Result
-import com.example.hilt_mvvm.ui.main.data.entities.Post
-import com.example.hilt_mvvm.ui.main.data.repository.PostRepository
-import com.example.hilt_mvvm.ui.main.data.service.PostsServices
-import com.google.gson.Gson
+
 import com.google.gson.JsonSyntaxException
-import retrofit2.Call
 import retrofit2.HttpException
 import java.lang.Exception
 import java.net.SocketTimeoutException
